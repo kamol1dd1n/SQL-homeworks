@@ -111,3 +111,45 @@ select c.CustomerID, EmployeeID from Orders o
 right join Customers c on o.CustomerID=c.CustomerID and EmployeeID=4
 where EmployeeID is null
 order by CustomerID
+
+--advanced
+--task32
+select c.CustomerID, companyname, o.orderid, sum(unitprice*Quantity) totalamt from Orders o
+join OrderDetails od on o.OrderID=od.OrderID and year(OrderDate)=2016
+join Customers c on c.CustomerID=o.CustomerID
+group by c.CustomerID, CompanyName, o.OrderID
+having sum(unitprice*Quantity)>=10000 and count(unitprice*Quantity)>=1
+order by totalamt desc
+--task33
+--??
+--task34
+select c.CustomerID, companyname, sum(unitprice*Quantity-(discount*UnitPrice*Quantity)) totalamt from Orders o
+join OrderDetails od on o.OrderID=od.OrderID and year(OrderDate)=2016
+join Customers c on c.CustomerID=o.CustomerID
+group by c.CustomerID, CompanyName
+having sum(unitprice*Quantity-(discount*quantity*unitprice))>=10000
+order by totalamt desc
+--task35
+select orderid, employeeid, lastorder from (
+select orderid, employeeid, case when month(DATEADD(dd, 1, orderdate))=month(OrderDate)+1 then OrderDate end as lastorder from Orders)
+a
+where lastorder is not null
+--task36 
+select top 10 orderid, count(*) count from OrderDetails
+group by OrderID
+order by count desc
+--task37
+select top 2 percent orderid from OrderDetails
+--select top 2 percent orderid from OrderDetails
+--order by newid()
+--task38
+use Northwind
+select od.OrderID from OrderDetails od
+join orders o on od.OrderID=o.OrderID and Quantity>=60
+order by OrderID
+select od.OrderID from OrderDetails od
+join orders o on od.OrderID=o.OrderID
+where Quantity>=60
+group by od.OrderID
+order by OrderID
+
